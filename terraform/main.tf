@@ -3,7 +3,7 @@ module "eks" {
   version = "20.31.1"
 
   cluster_name    = local.name
-  cluster_version = "1.31"
+  cluster_version = local.eks_cluster_version
 
   # Gives Terraform identity admin access to cluster which will
   # allow deploying resources (Karpenter) into the cluster
@@ -22,21 +22,15 @@ module "eks" {
   control_plane_subnet_ids = module.vpc.intra_subnets
 
   eks_managed_node_groups = {
-    karpenter = {
+    master = {
       ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["m5.large"]
+      instance_types = ["t3.large"]
 
       min_size     = 2
-      max_size     = 3
+      max_size     = 4
       desired_size = 2
     }
   }
-
-  # cluster_tags = merge(local.tags, {
-  #   NOTE - only use this option if you are using "attach_cluster_primary_security_group"
-  #   and you know what you're doing. In this case, you can remove the "node_security_group_tags" below.
-  #  "karpenter.sh/discovery" = local.name
-  # })
 
   node_security_group_tags = merge(local.tags, {
     # NOTE - if creating multiple security groups with this module, only tag the
