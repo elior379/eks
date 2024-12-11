@@ -10,6 +10,20 @@ module "eks_blueprints_addons" {
 
   enable_aws_load_balancer_controller = true
   aws_load_balancer_controller = {
+    set = [
+      {
+        name  = "vpcId"
+        value = module.vpc.vpc_id
+      },
+      {
+        name  = "podDisruptionBudget.maxUnavailable"
+        value = 1
+      },
+      {
+        name  = "enableServiceMutatorWebhook"
+        value = "false"
+      }
+    ]
     role_name   = "${module.eks.cluster_name}-alb-controller"
     policy_name = "${module.eks.cluster_name}-alb-controller"
   }
