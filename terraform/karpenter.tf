@@ -23,12 +23,12 @@ module "karpenter" {
 ################################################################################
 
 resource "helm_release" "karpenter" {
-  namespace           = "kube-system"
-  name                = "karpenter"
-  repository          = "oci://public.ecr.aws/karpenter"
-  chart               = "karpenter"
-  version             = "1.1.0"
-  wait                = false
+  namespace  = "kube-system"
+  name       = "karpenter"
+  repository = "oci://public.ecr.aws/karpenter"
+  chart      = "karpenter"
+  version    = "1.1.0"
+  wait       = false
 
   values = [
     <<-EOT

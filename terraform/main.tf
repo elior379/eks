@@ -11,10 +11,19 @@ module "eks" {
   cluster_endpoint_public_access           = true
 
   cluster_addons = {
-    coredns                      = {most_recent = true}
-    eks-pod-identity-agent       = {most_recent = true}
-    kube-proxy                   = {most_recent = true}
-    vpc-cni                      = {most_recent = true}
+    coredns                = { most_recent = true }
+    eks-pod-identity-agent = { most_recent = true }
+    kube-proxy             = { most_recent = true }
+    vpc-cni = {
+      most_recent = true
+      configuration_values = jsonencode({
+        enableNetworkPolicy = "true",
+        env = {
+          ENABLE_POD_ENI                    = "true",
+          POD_SECURITY_GROUP_ENFORCING_MODE = "standard"
+          ENABLE_PREFIX_DELEGATION          = "true"
+      } })
+    }
     aws-ebs-csi-driver = {
       most_recent              = true
       service_account_role_arn = aws_iam_role.ebs_csi.arn
@@ -37,7 +46,7 @@ module "eks" {
       min_size     = 2
       max_size     = 4
       desired_size = 2
-      
+
       taints = {
         dedicated = {
           key    = "CriticalAddonsOnly"
