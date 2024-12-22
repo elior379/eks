@@ -66,3 +66,7 @@ module "eks" {
 
   tags = local.tags
 }
+resource "random_string" "fluentbit_log_group" {
+  length  = 6
+  special = false
+}

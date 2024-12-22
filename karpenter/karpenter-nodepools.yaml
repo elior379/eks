@@ -15,6 +15,17 @@ spec:
         - key: "kubernetes.io/arch"
           operator: In
           values: ["amd64"]
+        - key: "node.kubernetes.io/instance-type"
+          operator: NotIn
+          values: 
+            - "t2.nano"
+            - "t2.micro"
+            - "t2.small"
+            - "t2.medium"
+            - "t3.nano"
+            - "t3.micro"
+            - "t3.small"
+            - "t3.medium"
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
